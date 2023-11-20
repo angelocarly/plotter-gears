@@ -15,16 +15,24 @@ class GearsEngine
             burst::Engine( inWidth, inHeight, inTitle ),
             mPresenter( GetPresentContext(), std::bind( & GearsEngine::Draw, this, std::placeholders::_1 ) )
         {
-            std::vector< vkt::Vertex > vertices =
+            std::size_t samples = 30;
+            std::vector< vkt::Vertex > vertices;
+            vertices.emplace_back( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3(), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+            for( int i = 0; i < samples; i++ )
             {
-                vkt::Vertex( glm::vec3( -0.5f, 0.5f, 0.0f ), glm::vec3(), glm::vec3( 0.0f, 1.0f, 0.0f ) ),
-                vkt::Vertex( glm::vec3( 0.0f, -0.5f, 0.0f ), glm::vec3(), glm::vec3( 0.0f, 0.0f, 1.0f ) ),
-                vkt::Vertex( glm::vec3( 0.5f, 0.5f, 0.0f ), glm::vec3(), glm::vec3( 1.0f, 0.0f, 0.0f ) )
-            };
-            std::vector< std::uint32_t > indices =
+                float angle = 2.0f * 3.1415926f * i / float( samples );
+                vertices.emplace_back( glm::vec3( cos( angle ), sin( angle ), 0.0f ), glm::vec3(), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+            }
+            std::vector< std::uint32_t > indices;
+            for( int i = 0; i < samples; i++ )
             {
-                0, 1, 2
-            };
+                indices.push_back( 0 );
+                indices.push_back( i );
+                indices.push_back( i + 1 );
+            }
+            indices.push_back( 0 );
+            indices.push_back( 1 );
+            indices.push_back( samples );
             mMesh = std::make_shared< vkt::Mesh >
             (
                 GetPresentContext().mDevice,
