@@ -5,15 +5,15 @@
 #include "grs/MeshPresenter.h"
 #include "vkt/Mesh.h"
 
-class ExampleEngine
+class GearsEngine
 :
     public burst::Engine
 {
     public:
-        ExampleEngine( std::size_t inWidth, std::size_t inHeight, const char * inTitle )
+        GearsEngine( std::size_t inWidth, std::size_t inHeight, const char * inTitle )
         :
             burst::Engine( inWidth, inHeight, inTitle ),
-            mPresenter( GetPresentContext(), std::bind( & ExampleEngine::Draw, this, std::placeholders::_1 ) )
+            mPresenter( GetPresentContext(), std::bind( & GearsEngine::Draw, this, std::placeholders::_1 ) )
         {
             std::vector< vkt::Vertex > vertices =
             {
@@ -34,7 +34,7 @@ class ExampleEngine
 
         }
 
-        ~ExampleEngine()
+        ~GearsEngine()
         {
             GetPresentContext().mDevice.GetVkDevice().waitIdle();
         }
@@ -60,6 +60,6 @@ class ExampleEngine
 
 int main()
 {
-    auto engine = ExampleEngine( 900, 900, "Burst example" );
+    auto engine = GearsEngine( 900, 900, "Gears" );
     engine.Run();
 }
