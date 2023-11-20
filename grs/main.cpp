@@ -3,6 +3,7 @@
 #include "burst/Engine.h"
 
 #include "grs/MeshPresenter.h"
+#include "vkt/Mesh.h"
 
 class ExampleEngine
 :
@@ -12,7 +13,7 @@ class ExampleEngine
         ExampleEngine( std::size_t inWidth, std::size_t inHeight, const char * inTitle )
         :
             burst::Engine( inWidth, inHeight, inTitle ),
-            mPresenter( GetPresentContext(), std::bind( & ExampleEngine::Draw, this ) )
+            mPresenter( GetPresentContext(), std::bind( & ExampleEngine::Draw, this, std::placeholders::_1 ) )
         {
             std::vector< vkt::Vertex > vertices =
             {
@@ -33,9 +34,14 @@ class ExampleEngine
 
         }
 
-        void Draw()
+        ~ExampleEngine()
         {
+            GetPresentContext().mDevice.GetVkDevice().waitIdle();
+        }
 
+        void Draw( vk::CommandBuffer inCommandBuffer  )
+        {
+            mMesh->Draw( inCommandBuffer );
         }
 
         virtual void Update() const override
